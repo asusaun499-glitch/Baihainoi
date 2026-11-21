@@ -12,7 +12,7 @@
 @media(max-width:850px){.shell{padding:18px 22px 24px}.layout{grid-template-columns:minmax(0,1fr) 380px;gap:34px;padding:45px 0 35px}.hero h1{font-size:52px}.game-card{padding:23px}.game-shell{padding:18px 22px 32px}}
 @media(max-width:680px){.shell{padding:15px 20px 20px}.top{height:50px}.top-actions{gap:14px}.top-actions .link-button:last-of-type{display:none}.api-status{font-size:11px}.brand{font-size:18px}.logo{width:32px;height:32px}.layout{grid-template-columns:1fr;gap:27px;padding:35px 0 27px}.hero h1{font-size:40px;line-height:1.22;margin:13px 0 10px}.hero p{font-size:14px;line-height:1.65}.steps{justify-content:space-between;gap:8px;margin-top:21px}.step{font-size:12px}.card{padding:21px;border-radius:18px}.card h2{font-size:22px}.sub{font-size:13px;margin-bottom:16px}.field{margin:12px 0}.foot{font-size:11px;flex-wrap:wrap}.game-shell{padding:12px 18px 26px}.game-top{grid-template-columns:1fr auto;row-gap:11px}.game-top .brand{font-size:17px}.room-info{grid-column:1;grid-row:2}.exit{grid-column:2;grid-row:1/3}.players{gap:8px;margin:16px 0}.player{padding:12px 13px;border-radius:14px}.player-name{font-size:14px}.score{font-size:16px}.role{font-size:11px}.swap-icon{font-size:18px}.game-card{padding:18px;border-radius:18px}.turn-title{font-size:21px}.instruction{font-size:13px}.word-panel{min-height:116px;padding:15px;margin:14px 0}.answer-row{grid-template-columns:1fr;gap:9px}.answer-row .button{width:100%}.attempts{font-size:11px}.round-actions{flex-direction:column}.next-turn{margin-top:14px}.rules{line-height:1.65}}
 @media(max-width:360px){.shell{padding-left:14px;padding-right:14px}.game-shell{padding-left:13px;padding-right:13px}.players{grid-template-columns:minmax(0,1fr) auto minmax(0,1fr)}.player{padding:10px}.player-name{font-size:12px}.score{font-size:14px}.turn-title{font-size:19px}.steps{font-size:11px}}
-</style>
+.net-status{font-size:11px;color:var(--green);white-space:nowrap}.room-share-code{margin:3px 0 18px;color:var(--green);font-size:30px;font-weight:700;letter-spacing:4px}.room-info{flex-wrap:wrap}</style>
 </head>
 <body>
 <div id="home" class="view active">
@@ -36,12 +36,12 @@
         <h2 id="startTitle">เริ่มเล่น</h2>
         <p class="sub">สร้างห้องใหม่ หรือกรอกเลขห้องของเพื่อน</p>
         <div class="field"><label for="name">ชื่อของคุณ</label><input id="name" class="input" maxlength="18" placeholder="เช่น มะลิ" autocomplete="nickname"></div>
-        <div class="field"><label for="partnerName">ชื่อเพื่อน</label><input id="partnerName" class="input" maxlength="18" placeholder="เช่น ต้น" autocomplete="off"></div>
+        
         <button id="create" class="button primary" type="button">สร้างห้องใหม่</button>
         <div class="divider">หรือเข้าร่วมห้อง</div>
         <div class="join-row"><input id="roomInput" class="input" inputmode="numeric" maxlength="6" placeholder="เลขห้อง 6 หลัก" aria-label="เลขห้อง 6 หลัก"><button id="join" class="button secondary" type="button">เข้าห้อง</button></div>
         <p id="homeMessage" class="message" aria-live="polite"></p>
-        <p class="privacy">ทั้งสองคนจะได้ใบ้ให้กัน · เล่นสลับกันบนอุปกรณ์เดียว</p>
+        <p class="privacy">ชวนเพื่อนด้วยเลขห้อง · เล่นคนละอุปกรณ์ได้</p>
       </section>
     </main>
     <footer class="foot"><span>เล่นง่าย · ไม่ต้องสมัครสมาชิก</span><span>ชุดคำศัพท์ภาษาไทยสำหรับผู้เรียน · ThaiReader</span></footer>
@@ -51,7 +51,7 @@
   <div class="game-shell">
     <header class="game-top">
       <a class="brand" href="#home" aria-label="กลับหน้าแรก"><span class="logo" aria-hidden="true">✳</span><span>ใบ้ให้หน่อย</span></a>
-      <div class="room-info"><span>ห้อง</span><strong id="roomCode" class="room-code">000000</strong><button id="copyRoom" class="link-button" type="button">คัดลอก</button></div>
+      <div class="room-info"><span>ห้อง</span><strong id="roomCode" class="room-code">000000</strong><button id="copyRoom" class="link-button" type="button">คัดลอก</button><span id="networkStatus" class="net-status">เชื่อมต่อแล้ว</span></div>
       <button class="exit" id="exit" type="button">ออกจากห้อง</button>
     </header>
     <div class="players" aria-label="คะแนนผู้เล่น">
@@ -86,113 +86,114 @@
 </div>
 <div id="handoff" class="handoff" hidden>
   <section class="handoff-card" role="dialog" aria-modal="true" aria-labelledby="handoffTitle">
-    <div class="eyebrow">ส่งต่ออุปกรณ์</div><h2 id="handoffTitle">ถึงตาคุณใบ้</h2>
+    <div class="eyebrow">เริ่มรอบ</div><h2 id="handoffTitle">ถึงตาคุณใบ้</h2>
     <p id="handoffText">ส่งหน้าจอให้ผู้ใบ้ก่อน จากนั้นกดเพื่อดูคำลับ</p>
     <button id="ready" class="button primary" type="button">เริ่มดูคำลับ</button>
     <p class="note">เมื่อจำคำได้แล้ว ค่อยส่งอุปกรณ์ให้ผู้ทาย</p>
   </section>
 </div>
+<div id="roomWaiting" class="handoff" hidden>
+  <section class="handoff-card" role="dialog" aria-modal="true" aria-labelledby="waitingTitle">
+    <div class="eyebrow">ห้องเล่นออนไลน์</div><h2 id="waitingTitle">กำลังเปิดห้อง</h2>
+    <p id="waitingMessage">กำลังเชื่อมต่อระบบห้องออนไลน์</p>
+    <div class="room-share-code" id="waitingCode">------</div>
+    <button id="copyWaitingRoom" class="button primary" type="button">คัดลอกเลขห้อง</button>
+    <button id="cancelWaitingRoom" class="button secondary" type="button" style="width:100%;margin-top:10px">ยกเลิก</button>
+    <p class="note">เพื่อนกรอกเลขนี้จากอุปกรณ์ของตัวเองเพื่อเข้าร่วม</p>
+  </section>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.5/dist/peerjs.min.js"></script>
 <script>'use strict';
 const FALLBACK=['มะพร้าว','จักรยาน','สายรุ้ง','กระต่าย','พระจันทร์','น้ำตก','ไอศกรีม','รถไฟ','หิ่งห้อย','ทุเรียน','ปลาหมึก','หุ่นยนต์','แว่นตา','เครื่องบิน','ดอกทานตะวัน','แตงโม','เต่าทะเล','กีตาร์','หมอน','ภูเขา','ตู้เย็น','ก๋วยเตี๋ยว','ผีเสื้อ','ร่ม','กล้องถ่ายรูป','มังกร','ข้าวเหนียว','ดาวตก','นาฬิกา','ช้าง'];
-let words=FALLBACK;
-let gameState={code:'',players:[],scores:[0,0],round:0,word:'',tries:0,done:false,phase:'home',giver:0,guesser:1};
-const $=s=>document.querySelector(s);
-const normalize=s=>s.trim().toLocaleLowerCase('th').replace(/[\sๆฯ!?.,]/g,'');
+let words=FALLBACK,peer=null,connection=null,isHost=false,networked=false,localPlayerIndex=-1,roomStarted=false,joining=false;
+let gameState={code:'',players:[],scores:[0,0],round:0,word:'',tries:0,done:false,phase:'home',giver:0,guesser:1,feedback:'',resultText:''};
+const $=selector=>document.querySelector(selector);
+const normalize=text=>text.trim().toLocaleLowerCase('th').replace(/[\sๆฯ!?.,]/g,'');
 async function loadWords(){
   try{
     const response=await fetch('https://thaireader.app/learner/v46/list.tsv',{cache:'force-cache',signal:AbortSignal.timeout(9000)});
     if(!response.ok)throw new Error('word list unavailable');
-    const text=await response.text();
-    const lines=text.trim().split(/\r?\n/);
-    const headers=lines.shift().split('\t').map(value=>value.replace(/^\uFEFF/,''));
+    const lines=(await response.text()).trim().split(/\r?\n/),headers=lines.shift().split('\t').map(value=>value.replace(/^\uFEFF/,''));
     const wordIndex=headers.indexOf('word'),kindIndex=headers.indexOf('kind'),tagIndex=headers.indexOf('tags');
     if(wordIndex<0)throw new Error('unexpected word list format');
     const apiWords=lines.map(line=>line.split('\t')).filter(row=>row[wordIndex]&&(!row[kindIndex]||row[kindIndex]==='word')&&(!row[tagIndex]||!/(vulgar|royal|dated|archaic)/.test(row[tagIndex]))).map(row=>row[wordIndex]).filter(word=>word.length>=2&&word.length<=14);
     if(apiWords.length<50)throw new Error('not enough vocabulary');
-    words=apiWords;
-    $('#apiStatus').textContent='โหลดคำศัพท์แล้ว';
-    $('#apiDot').classList.add('ready');
-  }catch(error){
-    $('#apiStatus').textContent='ใช้ชุดคำศัพท์สำรอง';
-    $('#apiDot').classList.remove('ready');
-  }
+    words=apiWords;$('#apiStatus').textContent='โหลดคำศัพท์แล้ว';$('#apiDot').classList.add('ready');
+  }catch(error){$('#apiStatus').textContent='ใช้ชุดคำศัพท์สำรอง';$('#apiDot').classList.remove('ready');}
 }
 const wordsReady=loadWords();
 function randomWord(){return words[Math.floor(Math.random()*words.length)];}
 function show(view){document.querySelectorAll('.view').forEach(el=>el.classList.remove('active'));$('#'+view).classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}
-function renderRound(){
-  const giver=gameState.giver,guesser=gameState.guesser;
-  $('#roomCode').textContent=gameState.code;
-  $('#roundLabel').textContent='รอบที่ '+gameState.round;
-  $('#turnTitle').textContent=gameState.players[giver]+' ใบ้ให้ '+gameState.players[guesser];
-  $('#nextTurnText').textContent=gameState.players[guesser]+' จะใบ้ให้ '+gameState.players[giver];
-  $('#p1name').textContent=gameState.players[0];$('#p2name').textContent=gameState.players[1];
-  $('#p1score').textContent=gameState.scores[0];$('#p2score').textContent=gameState.scores[1];
-  $('#p1role').textContent=giver===0?'กำลังใบ้ให้เพื่อน':'กำลังทายคำ';
-  $('#p2role').textContent=giver===1?'กำลังใบ้ให้เพื่อน':'กำลังทายคำ';
-  $('#p1').classList.toggle('current',giver===0);$('#p2').classList.toggle('current',giver===1);
-  $('#secret').textContent=gameState.word;$('#secret').classList.add('hidden');
-  $('#passToGuesser').classList.add('hide');$('#guess').value='';
-  $('#guessArea').classList.add('hide');$('#roundEnd').classList.add('hide');
-  $('#feedback').textContent='';$('#feedback').className='feedback';
-  $('#guessCount').textContent='ลองทายได้ 5 ครั้ง';$('#attemptDots').textContent='● ● ● ● ●';$('#attemptDots').setAttribute('aria-label','เหลือ 5 ครั้ง');
-  $('#handoffTitle').textContent=gameState.players[giver]+' ถึงตาคุณใบ้';
-  $('#handoffText').textContent='ส่งหน้าจอให้ '+gameState.players[giver]+' ก่อน จากนั้นเริ่มดูคำสุ่มได้เลย';
-  $('#ready').textContent='เริ่มดูคำสุ่ม';$('#handoff').hidden=false;gameState.phase='handoff';
+function setHomeMessage(message){$('#homeMessage').textContent=message;}
+function setWaiting(message,code=''){ $('#waitingMessage').textContent=message;if(code)$('#waitingCode').textContent=code;$('#roomWaiting').hidden=false;}
+function hideWaiting(){ $('#roomWaiting').hidden=true;}
+function destroyPeer(){if(connection){try{connection.close();}catch{}connection=null;}if(peer){try{peer.destroy();}catch{}peer=null;}roomStarted=false;joining=false;networked=false;isHost=false;localPlayerIndex=-1;}
+function waitForPeer(instance,timeout=12000){return new Promise((resolve,reject)=>{let settled=false;const timer=setTimeout(()=>finish(new Error('เชื่อมต่อระบบห้องไม่สำเร็จ')),timeout);const finish=(error,id)=>{if(settled)return;settled=true;clearTimeout(timer);error?reject(error):resolve(id);};instance.on('open',id=>finish(null,id));instance.on('error',error=>finish(error));});}
+function waitForConnection(conn,timeout=15000){return new Promise((resolve,reject)=>{let settled=false;const timer=setTimeout(()=>finish(new Error('หาไม่พบหรือเชื่อมต่อห้องไม่สำเร็จ')),timeout);const finish=error=>{if(settled)return;settled=true;clearTimeout(timer);error?reject(error):resolve();};conn.on('open',()=>finish());conn.on('error',error=>finish(error));conn.on('close',()=>finish(new Error('เจ้าของห้องปิดการเชื่อมต่อ')));});}
+function makeInitialState(code,hostName,guestName){return{code,players:[hostName,guestName],scores:[0,0],round:1,word:randomWord(),tries:0,done:false,phase:'handoff',giver:0,guesser:1,feedback:'',resultText:''};}
+function snapshotFor(playerIndex){const reveal=gameState.phase==='result'||(gameState.phase==='clue'&&gameState.giver===playerIndex);return{code:gameState.code,players:gameState.players,scores:gameState.scores,round:gameState.round,tries:gameState.tries,done:gameState.done,phase:gameState.phase,giver:gameState.giver,guesser:gameState.guesser,feedback:gameState.feedback,resultText:gameState.resultText,word:reveal?gameState.word:''};}
+function sendToGuest(message){if(connection&&connection.open)connection.send(message);}
+function renderGame(){
+ if(!gameState.players.length)return;
+ const giver=gameState.giver,guesser=gameState.guesser,localGiver=localPlayerIndex===giver,localGuesser=localPlayerIndex===guesser;
+ $('#roomCode').textContent=gameState.code;$('#networkStatus').textContent=connection&&connection.open?'เชื่อมต่อแล้ว':(isHost?'รอผู้เล่น':'กำลังเชื่อมต่อ');
+ $('#roundLabel').textContent='รอบที่ '+gameState.round;$('#turnTitle').textContent=gameState.players[giver]+' ใบ้ให้ '+gameState.players[guesser];$('#nextTurnText').textContent=gameState.players[guesser]+' จะใบ้ให้ '+gameState.players[giver];
+ $('#p1name').textContent=gameState.players[0];$('#p2name').textContent=gameState.players[1];$('#p1score').textContent=gameState.scores[0];$('#p2score').textContent=gameState.scores[1];
+ $('#p1role').textContent=giver===0?'กำลังใบ้ให้เพื่อน':'กำลังทายคำ';$('#p2role').textContent=giver===1?'กำลังใบ้ให้เพื่อน':'กำลังทายคำ';$('#p1').classList.toggle('current',giver===0);$('#p2').classList.toggle('current',giver===1);
+ $('#secret').textContent=gameState.word||'คำลับของผู้ใบ้';$('#guessCount').textContent=gameState.tries?'ลองทายได้อีก '+(5-gameState.tries)+' ครั้ง':'ลองทายได้ 5 ครั้ง';
+ const remaining=Math.max(0,5-gameState.tries);$('#attemptDots').textContent=remaining?'● '.repeat(remaining).trim():'';$('#attemptDots').setAttribute('aria-label','เหลือ '+remaining+' ครั้ง');$('#feedback').textContent=gameState.feedback||'';$('#roundResult').textContent=gameState.resultText||'';
+ $('#handoffTitle').textContent=gameState.players[giver]+' ถึงตาคุณใบ้';$('#handoffText').textContent='กดเพื่อเริ่มรอบ แล้วดูคำสุ่มที่ได้จากคลังคำศัพท์';$('#ready').textContent='เริ่มดูคำสุ่ม';
+ $('#ready').disabled=false;$('#passToGuesser').disabled=false;$('#guess').disabled=false;$('#submitGuess').disabled=false;$('#nextRound').disabled=false;
+ $('#secret').classList.add('hidden');$('#passToGuesser').classList.add('hide');$('#guessArea').classList.add('hide');$('#roundEnd').classList.add('hide');$('#handoff').hidden=true;
+ if(gameState.phase==='handoff'){$('#instruction').textContent=localGiver?'เริ่มรอบเพื่อดูคำสุ่ม แล้วอธิบายให้เพื่อนทาย':'กำลังรอ '+gameState.players[giver]+' เริ่มใบ้ให้คุณ';$('#handoff').hidden=!localGiver;}
+ else if(gameState.phase==='clue'){$('#instruction').textContent=localGiver?'คำสุ่มพร้อมแล้ว · อธิบายคำนี้โดยห้ามพูดคำเฉลย':gameState.players[giver]+' กำลังใบ้คำให้คุณ';if(localGiver){$('#secret').classList.remove('hidden');$('#passToGuesser').classList.remove('hide');}}
+ else if(gameState.phase==='guess'){$('#instruction').textContent=localGuesser?'ถึงตาคุณทายคำ ตอบได้ 5 ครั้ง':gameState.players[guesser]+' กำลังทายคำของคุณ';if(localGuesser)$('#guessArea').classList.remove('hide');}
+ else if(gameState.phase==='result'){$('#instruction').textContent='จบรอบแล้ว · รอบถัดไปสลับคนใบ้';$('#secret').classList.remove('hidden');$('#roundEnd').classList.remove('hide');$('#nextRound').textContent=localGuesser?'เริ่มรอบถัดไป':'รอเริ่มรอบถัดไป';}
 }
-async function startGame(code,players){
-  $('#create').disabled=true;$('#join').disabled=true;
-  await wordsReady;
-  gameState={code,players,scores:[0,0],round:1,word:randomWord(),tries:0,done:false,phase:'handoff',giver:0,guesser:1};
-  renderRound();show('game');
-  $('#create').disabled=false;$('#join').disabled=false;
+function syncHost(){renderGame();sendToGuest({type:'state',state:snapshotFor(1)});}
+function beginRoundAfterJoin(guestName){gameState=makeInitialState(gameState.code||$('#waitingCode').textContent,$('#name').value.trim()||'ผู้เล่น 1',guestName||'ผู้เล่น 2');roomStarted=true;hideWaiting();show('game');renderGame();sendToGuest({type:'room-start',state:snapshotFor(1)});}
+function bindConnection(conn){connection=conn;conn.on('data',message=>{if(!message||typeof message!=='object')return;if(isHost)handleHostMessage(message);else handleGuestMessage(message);});conn.on('close',()=>{connection=null;if(isHost){roomStarted=false;$('#networkStatus').textContent='ผู้เล่นหลุด';$('#instruction').textContent='เพื่อนหลุดจากห้อง · สามารถให้เข้าด้วยเลขห้องเดิมได้';}else{$('#networkStatus').textContent='เจ้าของห้องหลุด';$('#instruction').textContent='เจ้าของห้องปิดการเชื่อมต่อแล้ว';$('#guessArea').classList.add('hide');}});conn.on('error',()=>{if($('#networkStatus'))$('#networkStatus').textContent='การเชื่อมต่อมีปัญหา';});}
+function handleHostMessage(message){
+ if(message.type==='join'){
+  if(roomStarted&&connection&&connection.open){sendToGuest({type:'reject',reason:'ห้องนี้มีผู้เล่นครบแล้ว'});connection.close();return;}
+  const guestName=String(message.name||'ผู้เล่น 2').trim().slice(0,18)||'ผู้เล่น 2';
+  if(!gameState.players.length){gameState.code=$('#waitingCode').textContent;beginRoundAfterJoin(guestName);}
+  else{gameState.players[1]=guestName;roomStarted=true;hideWaiting();show('game');renderGame();sendToGuest({type:'room-start',state:snapshotFor(1)});}
+  return;
+ }
+ if(!roomStarted)return;
+ if(message.type==='leave'){roomStarted=false;if(connection){try{connection.close();}catch{}}connection=null;$('#networkStatus').textContent='รอผู้เล่น';$('#instruction').textContent='เพื่อนออกจากห้อง · แชร์เลขห้องเดิมเพื่อเชิญคนใหม่';return;}
+ if(message.type==='ready'&&gameState.phase==='handoff'&&gameState.giver===1){gameState.phase='clue';gameState.feedback='';syncHost();return;}
+ if(message.type==='pass'&&gameState.phase==='clue'&&gameState.giver===1){gameState.phase='guess';gameState.feedback='';syncHost();return;}
+ if(message.type==='guess'&&gameState.phase==='guess'&&gameState.guesser===1){applyGuess(String(message.value||''));return;}
+ if(message.type==='next'&&gameState.phase==='result'&&gameState.guesser===1){advanceRound();}
 }
-function startClue(){
-  gameState.phase='clue';$('#handoff').hidden=true;
-  $('#instruction').textContent='อธิบายคำให้เพื่อนเข้าใจ โดยห้ามพูดคำเฉลย';
-  $('#secret').classList.remove('hidden');
-  $('#passToGuesser').classList.remove('hide');$('#passToGuesser').focus();
+function handleGuestMessage(message){if(message.type==='reject'){setWaiting(message.reason||'เข้าห้องนี้ไม่ได้');return;}if(message.type==='room-start'||message.type==='state'){joining=false;networked=true;isHost=false;localPlayerIndex=1;roomStarted=true;gameState={...gameState,...message.state};hideWaiting();show('game');renderGame();}}
+async function createRoom(){
+ setHomeMessage('');if(typeof Peer!=='function'){setHomeMessage('โหลดระบบห้องออนไลน์ไม่ได้ กรุณารีเฟรชแล้วลองอีกครั้ง');return;}await wordsReady;$('#create').disabled=true;$('#join').disabled=true;setWaiting('กำลังเปิดห้องออนไลน์…');let opened=false,lastError=null;
+ for(let attempt=0;attempt<4&&!opened;attempt++){const code=String(Math.floor(100000+Math.random()*900000)),candidate=new Peer('baihin-'+code);try{await waitForPeer(candidate);peer=candidate;opened=true;gameState.code=code;networked=true;isHost=true;localPlayerIndex=0;roomStarted=false;$('#waitingCode').textContent=code;$('#waitingTitle').textContent='รอเพื่อนเข้าห้อง';setWaiting('ส่งเลขห้องนี้ให้เพื่อน แล้วรอให้เข้าร่วม');candidate.on('connection',conn=>{if(connection){conn.on('open',()=>{conn.send({type:'reject',reason:'ห้องนี้มีผู้เล่นครบแล้ว'});conn.close();});return;}bindConnection(conn);});candidate.on('error',error=>{$('#waitingMessage').textContent='การเชื่อมต่อห้องมีปัญหา ลองสร้างห้องใหม่';console.warn(error);});}catch(error){lastError=error;try{candidate.destroy();}catch{}if(error.type!=='unavailable-id')break;}}
+ $('#create').disabled=false;$('#join').disabled=false;if(!opened){destroyPeer();hideWaiting();setHomeMessage(lastError?.type==='unavailable-id'?'เลขห้องชนกัน กรุณาสร้างห้องใหม่อีกครั้ง':'เปิดห้องออนไลน์ไม่สำเร็จ กรุณาลองใหม่');}
 }
-function passToGuesser(){
-  if(gameState.phase!=='clue')return;
-  $('#secret').classList.add('hidden');$('#passToGuesser').classList.add('hide');
-  gameState.phase='guess';
-  $('#instruction').textContent=gameState.players[gameState.giver]+' ใบ้เสร็จแล้ว ส่งอุปกรณ์ให้ '+gameState.players[gameState.guesser]+' ทายได้เลย';
-  $('#guessArea').classList.remove('hide');$('#guess').focus();
+async function joinRoom(){
+ setHomeMessage('');const code=$('#roomInput').value.trim();if(!/^\d{6}$/.test(code)){setHomeMessage('กรุณากรอกเลขห้อง 6 หลัก');$('#roomInput').focus();return;}if(typeof Peer!=='function'){setHomeMessage('โหลดระบบห้องออนไลน์ไม่ได้ กรุณารีเฟรชแล้วลองอีกครั้ง');return;}
+ await wordsReady;$('#join').disabled=true;$('#create').disabled=true;joining=true;setWaiting('กำลังเชื่อมต่อกับห้อง '+code+'…',code);$('#waitingTitle').textContent='กำลังเข้าร่วมห้อง';
+ try{peer=new Peer();await waitForPeer(peer);connection=peer.connect('baihin-'+code,{reliable:true});bindConnection(connection);await waitForConnection(connection);connection.send({type:'join',name:$('#name').value.trim()||'ผู้เล่น 2'});$('#waitingMessage').textContent='เชื่อมต่อแล้ว กำลังรอเจ้าของห้องเริ่มเกม…';setTimeout(()=>{if(joining&&!roomStarted){destroyPeer();hideWaiting();$('#join').disabled=false;$('#create').disabled=false;setHomeMessage('เข้าห้องไม่สำเร็จ ตรวจเลขห้องแล้วลองอีกครั้ง');}},16000);}
+ catch(error){destroyPeer();hideWaiting();$('#join').disabled=false;$('#create').disabled=false;setHomeMessage(error.message||'เข้าห้องไม่สำเร็จ ตรวจเลขห้องแล้วลองอีกครั้ง');}
 }
-function endRound(correct){
-  gameState.done=true;gameState.phase='result';const index=gameState.guesser;
-  if(correct){gameState.scores[index]++;$('#roundResult').textContent='ถูกต้อง! '+gameState.players[index]+' ได้ 1 คะแนน';$('#roundResult').className='feedback good';}
-  else{gameState.scores[index]--;$('#roundResult').textContent='หมดโอกาสแล้ว · '+gameState.players[index]+' เสีย 1 คะแนน';$('#roundResult').className='feedback';}
-  $('#p1score').textContent=gameState.scores[0];$('#p2score').textContent=gameState.scores[1];
-  $('#guessArea').classList.add('hide');$('#roundEnd').classList.remove('hide');$('#secret').classList.remove('hidden');
-}
-function submitGuess(){
-  if(gameState.phase!=='guess'||gameState.done)return;
-  const value=$('#guess').value;
-  if(!value.trim()){$('#feedback').textContent='พิมพ์คำตอบก่อนนะ';$('#guess').focus();return;}
-  gameState.tries++;
-  const left=5-gameState.tries;
-  $('#guessCount').textContent=left?'ลองทายได้อีก '+left+' ครั้ง':'ใช้ครบ 5 ครั้งแล้ว';
-  $('#attemptDots').textContent='● '.repeat(left).trim();$('#attemptDots').setAttribute('aria-label','เหลือ '+left+' ครั้ง');
-  if(normalize(value)===normalize(gameState.word))endRound(true);
-  else if(left===0)endRound(false);
-  else{$('#feedback').textContent='ยังไม่ใช่ ลองอีกครั้งได้เลย';$('#feedback').className='feedback';$('#guess').select();}
-}
-$('#create').addEventListener('click',()=>{const first=$('#name').value.trim()||'ผู้เล่น 1',second=$('#partnerName').value.trim()||'ผู้เล่น 2',code=String(Math.floor(100000+Math.random()*900000));startGame(code,[first,second]);});
-$('#join').addEventListener('click',()=>{const code=$('#roomInput').value.trim();if(!/^\d{6}$/.test(code)){$('#homeMessage').textContent='กรุณากรอกเลขห้อง 6 หลัก';$('#roomInput').focus();return;}const first=$('#partnerName').value.trim()||'ผู้เล่น 1',second=$('#name').value.trim()||'ผู้เล่น 2';$('#homeMessage').textContent='';startGame(code,[first,second]);});
-$('#ready').addEventListener('click',startClue);
-$('#passToGuesser').addEventListener('click',passToGuesser);
-$('#submitGuess').addEventListener('click',submitGuess);
-$('#guess').addEventListener('keydown',event=>{if(event.key==='Enter')submitGuess();});
-$('#nextRound').addEventListener('click',async()=>{gameState.round++;gameState.giver=gameState.guesser;gameState.guesser=1-gameState.giver;await wordsReady;gameState.word=randomWord();gameState.tries=0;gameState.done=false;renderRound();});
-$('#showAnswer').addEventListener('click',()=>$('#secret').classList.remove('hidden'));
-$('#exit').addEventListener('click',()=>{gameState.phase='home';$('#handoff').hidden=true;$('#homeMessage').textContent='';show('home');});
-$('#copyRoom').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(gameState.code);$('#copyRoom').textContent='คัดลอกแล้ว';setTimeout(()=>$('#copyRoom').textContent='คัดลอก',1300);}catch(error){$('#copyRoom').textContent='เลขห้อง '+gameState.code;}});
-$('#howTo').addEventListener('click',()=>document.querySelector('.steps').scrollIntoView({behavior:'smooth',block:'center'}));</script>
-</body>
-</html>
-
-
+function startClue(){if(!networked||localPlayerIndex!==gameState.giver||gameState.phase!=='handoff')return;if(isHost){gameState.phase='clue';gameState.feedback='';syncHost();}else{sendToGuest({type:'ready'});$('#handoff').hidden=true;$('#instruction').textContent='กำลังเริ่มรอบ…';$('#ready').disabled=true;}}
+function passToGuesser(){if(!networked||localPlayerIndex!==gameState.giver||gameState.phase!=='clue')return;if(isHost){gameState.phase='guess';gameState.feedback='';syncHost();}else{sendToGuest({type:'pass'});$('#passToGuesser').disabled=true;$('#instruction').textContent='กำลังส่งรอบให้ผู้ทาย…';}}
+function applyGuess(value){if(gameState.phase!=='guess'||gameState.done||!value.trim()){if(!value.trim())gameState.feedback='พิมพ์คำตอบก่อนนะ';syncHost();return;}gameState.tries++;const left=5-gameState.tries;if(normalize(value)===normalize(gameState.word)){gameState.scores[gameState.guesser]++;gameState.phase='result';gameState.done=true;gameState.resultText='ถูกต้อง! '+gameState.players[gameState.guesser]+' ได้ 1 คะแนน';gameState.feedback='';}else if(left===0){gameState.scores[gameState.guesser]--;gameState.phase='result';gameState.done=true;gameState.resultText='หมดโอกาสแล้ว · '+gameState.players[gameState.guesser]+' เสีย 1 คะแนน';gameState.feedback='';}else gameState.feedback='ยังไม่ใช่ ลองอีกครั้งได้เลย';syncHost();}
+function submitGuess(){if(gameState.phase!=='guess'||localPlayerIndex!==gameState.guesser)return;const value=$('#guess').value;if(!value.trim()){$('#feedback').textContent='พิมพ์คำตอบก่อนนะ';$('#guess').focus();return;}if(isHost)applyGuess(value);else{sendToGuest({type:'guess',value});$('#guess').disabled=true;$('#submitGuess').disabled=true;$('#feedback').textContent='ส่งคำตอบแล้ว กำลังรอผล…';}}
+function advanceRound(){gameState.round++;gameState.giver=gameState.guesser;gameState.guesser=1-gameState.giver;gameState.word=randomWord();gameState.tries=0;gameState.done=false;gameState.phase='handoff';gameState.feedback='';gameState.resultText='';syncHost();}
+function nextRound(){if(gameState.phase!=='result'||localPlayerIndex!==gameState.guesser)return;if(isHost)advanceRound();else{$('#nextRound').disabled=true;$('#instruction').textContent='กำลังเริ่มรอบถัดไป…';sendToGuest({type:'next'});}}
+function exitRoom(){if(connection&&connection.open){try{connection.send({type:'leave'});}catch{}}destroyPeer();hideWaiting();show('home');setHomeMessage('');}
+async function copyCode(code){try{await navigator.clipboard.writeText(code);return true;}catch{return false;}}
+$('#create').addEventListener('click',createRoom);$('#join').addEventListener('click',joinRoom);$('#ready').addEventListener('click',startClue);$('#passToGuesser').addEventListener('click',passToGuesser);
+$('#submitGuess').addEventListener('click',submitGuess);$('#guess').addEventListener('keydown',event=>{if(event.key==='Enter')submitGuess();});$('#nextRound').addEventListener('click',nextRound);
+$('#showAnswer').addEventListener('click',()=>$('#secret').classList.remove('hidden'));$('#exit').addEventListener('click',exitRoom);
+$('#cancelWaitingRoom').addEventListener('click',()=>{destroyPeer();hideWaiting();$('#create').disabled=false;$('#join').disabled=false;});
+$('#copyWaitingRoom').addEventListener('click',async()=>{$('#copyWaitingRoom').textContent=await copyCode($('#waitingCode').textContent)?'คัดลอกแล้ว':'เลขห้อง '+$('#waitingCode').textContent;});
+$('#copyRoom').addEventListener('click',async()=>{$('#copyRoom').textContent=await copyCode(gameState.code)?'คัดลอกแล้ว':'เลข '+gameState.code;});
+$('#howTo').addEventListener('click',()=>document.querySelector('.steps').scrollIntoView({behavior:'smooth',block:'center'}));</script></body></html>
 
 
